@@ -1,0 +1,26 @@
+# ============================================================
+# .gitattributes — normalize line endings across OS
+# ============================================================
+
+# Default: normalize to LF in repo, checkout as native on Windows
+* text=auto eol=lf
+
+# Force LF on shell scripts (must not become CRLF on Windows)
+*.sh text eol=lf
+
+# Force CRLF on Windows batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary files — never modify line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.pfx binary
+*.p12 binary

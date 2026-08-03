@@ -1,0 +1,50 @@
+version: "3.9"
+
+# ---------------------------------------------------------------
+# Copy .env.example → .env and fill in your values before running.
+# Never commit the .env file.
+# ---------------------------------------------------------------
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: marketpro-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${SQL_SA_PASSWORD}"
+      MSSQL_PID: "Express"
+    ports:
+      - "14333:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: marketpro-api
+    depends_on:
+      - sqlserver
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Default: "Server=sqlserver,1433;Database=MarketProDb;User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True;"
+      Jwt__Key: "${JWT_SECRET_KEY}"
+      Jwt__Issuer: "MarketPro"
+      Jwt__Audience: "MarketProClient"
+      Cors__AllowedOrigins__0: "http://localhost:8081"
+    ports:
+      - "5001:8080"
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: marketpro-web
+    depends_on:
+      - api
+    ports:
+      - "8081:80"
+
+volumes:
+  mssql-data:
