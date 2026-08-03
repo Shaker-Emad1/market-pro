@@ -1,4 +1,4 @@
-# Market Pro POS — نظام نقاط بيع للسوبرماركت
+# Market Pro POS — نظام  بيع للسوبرماركت
 
 <div align="center">
 
